@@ -1,6 +1,7 @@
+library(ggplot2)
 library(plyr)
 
-cntPublic<- function(h)
+cntPublic <- function(h)
 {
     count <- daply(df2, .variables = 'id', .fun = cnt, h);
     return(sum(count))
@@ -9,16 +10,12 @@ cntPublic<- function(h)
 cnt<- function(p, h)
 {
     dist <- sqrt((h$Response_X-p$Response_X)^2+(h$Response_Y-p$Response_Y)^2)
-    if (dist <= 1200) {
+    if (dist <= 1500) {
         return(T)
     }
     return(F)
 }
 
-myfun<- function()
-{
-    cntPublic(df1,df2)
-}
 
 main <- function()
 {
@@ -34,9 +31,6 @@ main <- function()
     # df2 <- data.frame(id = 1:nrow(df2), df2)
     # write.csv(df2, "./Elementart_result.csv", row.names = FALSE)
 
-    # df1 <- read.csv("data_test.csv")
-    # df2 <<- read.csv("Elementart_result_test.csv")
-
     df1 <- read.csv("data.csv")
     df2 <<- read.csv("Elementart_result.csv")
    
@@ -44,6 +38,7 @@ main <- function()
 
     df3 <- data.frame(df1, Count = count)
     write.csv(df3, "./count.csv", row.names = FALSE)
+    ggplot(df3, aes(Count, 單價元平方公尺 ))+geom_point()
 }
 
 main()
