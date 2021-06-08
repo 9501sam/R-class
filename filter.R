@@ -20,22 +20,45 @@ filter_data <- function(dir) # dir of transaction file
     df <- read.csv(paste("./", dir, "/B_lvr_land_A.csv", sep = ""))
     df <- df[df$交易標的 == '房地(土地+建物)', ] 
     df <- df[df$主要用途 == '住家用', ]
-    df1 <- df[substr(df$土地區段位置建物區段門牌, 2, 2) == "中", ]
-    df2 <- df[substr(df$土地區段位置建物區段門牌, 2, 2) != "中", ]
 
-    df2 <- ddply(df2, .variable = NULL, .fun = complete_address, .id = NULL) # complete addresses
+    df1 <- df[substr(df$土地區段位置建物區段門牌, 1, 2) == "臺中", ]
+    df2 <- df[substr(df$土地區段位置建物區段門牌, 1, 2) == "台中", ]
+    df4 <- df[substr(df$土地區段位置建物區段門牌, 1, 2) != "臺中", ]
+    df4 <- df4[substr(df3$土地區段位置建物區段門牌, 1, 2) != "台中", ]
 
-    df <- data.frame(rbind(df1, df2))
+    # complete addresses
+    df4 <- ddply(df4, .variable = NULL, .fun = complete_address, .id = NULL) 
+
+    df <- data.frame(rbind(df1, df2, df4))
 
     write.csv(df, paste("./", dir, "/", dir, ".csv", sep = ""), row.names = FALSE)
+}
+
+filter_data_b <- function(dir) # dir of transaction file
+{
+    df <- read.csv(paste("./", dir, "/B_lvr_land_A.csv", sep = ""))
+    df <- df[df$交易標的 == '房地(土地+建物)', ] 
+    df <- df[df$主要用途 == '商業用', ]
+
+    df1 <- df[substr(df$土地區段位置建物區段門牌, 1, 2) == "臺中", ]
+    df2 <- df[substr(df$土地區段位置建物區段門牌, 1, 2) == "台中", ]
+    df4 <- df[substr(df$土地區段位置建物區段門牌, 1, 2) != "臺中", ]
+    df4 <- df4[substr(df4$土地區段位置建物區段門牌, 1, 2) != "台中", ]
+
+    # complete addresses
+    df4 <- ddply(df4, .variable = NULL, .fun = complete_address, .id = NULL) 
+
+    df <- data.frame(rbind(df1, df2, df4))
+
+    write.csv(df, paste("./", dir, "/", dir, "_b.csv", sep = ""), row.names = FALSE)
 }
 
 main <- function()
 {
     filter_data("10904")
-    filter_data("10903")
-    filter_data("10902")
-    filter_data("10901")
+    # filter_data("10903")
+    # filter_data("10902")
+    # filter_data("10901")
 
     # filter_data("10804")
     # filter_data("10803")
