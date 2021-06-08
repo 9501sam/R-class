@@ -1,4 +1,4 @@
-# library(ggplot2)
+library(ggplot2)
 library(plyr)
 
 add_xy <- function(dir)
@@ -53,9 +53,23 @@ add_count <- function(dir)
     # write.csv(df_h, paste("./", dir, "/all_data.csv", sep = ""), row.names = FALSE)
 }
 
+avg <- function(df)
+{
+    # return(data.frame(Count_Elementary = df$Count_Elementary, 
+                      # avg = mean(df$單價元平方公尺)))
+    return(mean(df$單價元平方公尺))
+}
+
 draw <- function(dir)
 {
     df <- read.csv(paste("./", dir, "/all_data.csv", sep = ""))
-    ggplot(df, aes(Count_Elementary, 單價元平方公尺 )) + geom_point()
+    # print(unique(df$Count_Elementary))
+    unique(df$Count_Elementary)
+    x <- daply(df, .variables = 'Count_Elementary', .fun = avg);
+    print(x)
+
+    # ggplot(df, aes(Count_Elementary, y = 單價元平方公尺)) + geom_col() 
+    # ggplot(df, aes(Count_Elementary, y = mean(單價元平方公尺))) + geom_col() 
+    # ggplot(df, aes(鄉鎮市區) ) + geom_histogram(stat = "count")
 }
 
